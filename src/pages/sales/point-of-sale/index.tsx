@@ -1,5 +1,5 @@
 import {
-  Card, Col, Form, Row,
+  Col, Form, Row,
 } from 'antd';
 import { companyState, getDetailData } from '@jshop/core';
 import { useRecoilState } from 'recoil';
@@ -46,7 +46,7 @@ export function PointOfSale() {
                 <Form.Item
                   name={['product_lines']}
                   rules={[
-                    ({ getFieldValue }) => ({
+                    () => ({
                       validator(_, value) {
                         if (value?.length > 0) {
                           return Promise.resolve();

@@ -1,4 +1,6 @@
-import { Button, Card, Checkbox, Form, Input, InputNumber, Modal, Space, notification } from 'antd';
+import {
+  Button, Card, Checkbox, Form, Input, InputNumber, Modal, Space, notification,
+} from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
@@ -29,7 +31,7 @@ export function Setting() {
         setSetting(data);
       } else {
         // docSnap.data() will be undefined in this case
-        console.log('No such document!');
+        // console.log('No such document!');
       }
     } catch (err: any) {
       if (!currentUser) navigate('/login');

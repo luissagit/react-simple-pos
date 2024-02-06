@@ -1,6 +1,8 @@
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { useEffect, useState } from 'react';
-import { collection, endAt, getDocs, orderBy, query, startAt } from 'firebase/firestore';
+import {
+  collection, endAt, getDocs, orderBy, query, startAt,
+} from 'firebase/firestore';
 import { db } from '@jshop/core';
 import { v4 } from 'uuid';
 import { SelectPaginateProps } from '../select/entities';

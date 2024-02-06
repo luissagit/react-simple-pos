@@ -25,7 +25,6 @@ export async function submitData(table: string, values: any) {
     await setDoc(doc(db, table, newValues?.id), newValues);
     return newValues;
   } catch (err) {
-    console.error(err);
     return null;
   }
 }

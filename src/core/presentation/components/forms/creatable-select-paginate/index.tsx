@@ -4,7 +4,9 @@ import { withAsyncPaginate } from 'react-select-async-paginate';
 import type { UseAsyncPaginateParams, ComponentProps } from 'react-select-async-paginate';
 import { GroupBase } from 'react-select';
 import { ReactElement, useEffect, useState } from 'react';
-import { collection, endAt, getDocs, orderBy, query, startAt } from 'firebase/firestore';
+import {
+  collection, endAt, getDocs, orderBy, query, startAt,
+} from 'firebase/firestore';
 import { db, submitData } from '@jshop/core';
 import { v4 } from 'uuid';
 import { SelectPaginateProps } from '../select/entities';
@@ -15,8 +17,8 @@ type AsyncPaginateCreatableProps<
   Additional,
   IsMulti extends boolean,
 > = CreatableProps<OptionType, IsMulti, Group> &
-  UseAsyncPaginateParams<OptionType, Group, Additional> &
-  ComponentProps<OptionType, Group, IsMulti>;
+UseAsyncPaginateParams<OptionType, Group, Additional> &
+ComponentProps<OptionType, Group, IsMulti>;
 
 type AsyncPaginateCreatableType = <
   OptionType,
@@ -30,7 +32,9 @@ type AsyncPaginateCreatableType = <
 export const CreatableAsyncPaginate = withAsyncPaginate(Creatable) as AsyncPaginateCreatableType;
 
 export function CreatableSelectPaginate(props: SelectPaginateProps) {
-  const { value, onChange, isMulti, table, isClearable = true } = props;
+  const {
+    value, onChange, isMulti, table, isClearable = true,
+  } = props;
   const dataRef = collection(db, table);
   const [selectedValue, setSelectedValue] = useState<any>();
   async function onChangeSelect(data: any, meta: any) {

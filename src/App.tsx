@@ -21,13 +21,12 @@ import { RecoilRoot } from 'recoil';
 const { Content } = Layout;
 
 function App() {
-  console.log(process.env.VITE_API_KEY, 333)
   return (
     <ConfigProvider theme={theme}>
       <RecoilRoot>
         <Layout style={{ minHeight: '100vh' }}>
           <MenuHeader />
-          <Content style={{ padding: '20px'}}>
+          <Content style={{ padding: '20px' }}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />

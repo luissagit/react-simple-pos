@@ -1,6 +1,10 @@
-import { Button, Form, Input, InputNumber, Space } from 'antd';
+import {
+  Button, Form, Input, InputNumber, Space,
+} from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { CreatableSelectPaginate, IndexTable, SelectPaginate, db, rupiah } from '@jshop/core';
+import {
+  CreatableSelectPaginate, IndexTable, SelectPaginate, db, rupiah,
+} from '@jshop/core';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { doc, writeBatch } from 'firebase/firestore';
@@ -42,7 +46,8 @@ function FormComponent() {
           function transformOptions(options: any[]) {
             return options
               ?.map((item: any) => {
-                if (values?.product_category && values?.product_category?.id === item?.product_category?.id) {
+                if (values?.product_category
+                  && values?.product_category?.id === item?.product_category?.id) {
                   return item;
                 }
                 if (!values?.product_category) return item;
@@ -63,7 +68,8 @@ function FormComponent() {
           const variants = values?.variants ?? [];
           const lastVariant = variants?.[(variants?.length ?? 0) - 1];
           const defaultUom = lastVariant?.uom ?? values?.product_master?.uom;
-          const defaultPrice = lastVariant?.price_per_unit ?? values?.product_master?.price_per_unit;
+          const defaultPrice = lastVariant?.price_per_unit
+           ?? values?.product_master?.price_per_unit;
 
           if (values?.id) {
             return (
@@ -258,10 +264,10 @@ export function ProductVariant(props: Props) {
       }}
       {...(isStockOpname
         ? {
-            tableProps: {
-              rowSelection: undefined,
-            },
-          }
+          tableProps: {
+            rowSelection: undefined,
+          },
+        }
         : {})}
     />
   );

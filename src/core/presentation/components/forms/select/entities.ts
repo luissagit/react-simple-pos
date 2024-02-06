@@ -19,7 +19,7 @@ export interface OptionsType {
 export interface SelectProps extends Props, BaseSelectProps {}
 export interface SelectPaginateProps
   extends Omit<AsyncPaginateProps<any, GroupBase<any>, AdditionalSelectProps, boolean>, 'loadOptions'>,
-    BaseSelectProps {
+  BaseSelectProps {
   itemAllOption?: OptionsType;
   keySearch?: string;
   filterRequest?: any;

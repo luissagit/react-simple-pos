@@ -1,7 +1,7 @@
 import { db, rupiah } from '@jshop/core';
 import {
   Button,
-  Card, Form, InputNumber, notification,
+  Card, InputNumber, notification,
 } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import {
@@ -46,7 +46,7 @@ export function FormProductLine(props: Props) {
     {
       title: 'Action',
       key: 'action',
-      render(value, record, index) {
+      render(item: any, record) {
         return (
           <Button danger size="small" onClick={() => handleDelete(record)}>
             <IoTrashBinSharp />
@@ -78,8 +78,8 @@ export function FormProductLine(props: Props) {
       title: 'Qty',
       key: 'qty',
       dataIndex: ['qty'],
-      render(value, record, index) {
-        return <InputNumber onChange={(value) => onChangeQty(value, record)} value={value} />;
+      render(item, record) {
+        return <InputNumber onChange={(data) => onChangeQty(data, record)} value={value} />;
       },
     },
     {
@@ -149,7 +149,7 @@ export function FormProductLine(props: Props) {
         });
       }
     } catch (err: any) {
-      console.log(err);
+      // console.log(err);
       notification.error({
         message: err?.message,
       });

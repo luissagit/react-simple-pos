@@ -1,6 +1,8 @@
 import { Form, Input, InputNumber } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { CreatableSelectPaginate, IndexTable, SelectPaginate, rupiah } from '@jshop/core';
+import {
+  CreatableSelectPaginate, IndexTable, SelectPaginate, rupiah,
+} from '@jshop/core';
 
 function FormComponent() {
   return (

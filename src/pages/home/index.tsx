@@ -91,7 +91,7 @@ export function Home() {
         setUserRecoil(newUser);
       }
     } catch (err) {
-      console.log(err);
+      //
     }
     setLoading(false);
   }

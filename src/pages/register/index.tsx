@@ -1,4 +1,6 @@
-import { Button, Card, Form, Input, notification } from 'antd';
+import {
+  Button, Card, Form, Input, notification,
+} from 'antd';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { doc, setDoc } from 'firebase/firestore';

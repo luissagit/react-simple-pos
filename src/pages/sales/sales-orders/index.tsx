@@ -34,7 +34,7 @@ export function SalesOrders() {
       key: 'total',
       dataIndex: ['net_price'],
       title: 'Total',
-      render(value, record, index) {
+      render(value) {
         return rupiah(value);
       },
     },
@@ -42,7 +42,7 @@ export function SalesOrders() {
       key: 'payment',
       dataIndex: ['payment'],
       title: 'Payment',
-      render(value, record, index) {
+      render(value) {
         return rupiah(value);
       },
     },

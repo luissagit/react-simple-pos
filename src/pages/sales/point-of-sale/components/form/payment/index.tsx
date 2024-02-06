@@ -1,4 +1,6 @@
-import { companyState, db, rupiah, userState } from '@jshop/core';
+import {
+  companyState, db, rupiah, userState,
+} from '@jshop/core';
 import {
   Button,
   Card, Descriptions, DescriptionsProps, Form, FormInstance, InputNumber, Spin, notification,
