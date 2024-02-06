@@ -1,0 +1,15 @@
+#root,
+html,
+body {
+  margin: 0;
+  padding: 0;
+  max-width: 100vw;
+}
+
+.ant-form-item {
+  margin-bottom: 5px;
+}
+
+.ant-table-measure-row {
+  display: none !important;
+}
