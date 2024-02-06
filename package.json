@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives",
+    "lint:fix": "eslint src --ext ts,tsx --report-unused-disable-directives --fix",
+    "lint:quiet": "eslint src --ext ts,tsx --report-unused-disable-directives --quiet",
     "preview": "vite preview",
     "prepare": "husky install",
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,json}\" --config \"./.prettierrc\""
