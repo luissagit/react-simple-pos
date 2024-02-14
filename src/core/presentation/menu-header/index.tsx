@@ -1,21 +1,22 @@
-import { companyState, getDetailData } from '@jshop/core';
+import { companyState, getDetailData, submitData } from '@jshop/core';
 import { userState } from '@jshop/core/states/user-state';
 import {
   Avatar, Button, Menu, MenuProps, Popconfirm, notification,
 } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 import Title from 'antd/es/typography/Title';
-import { getAuth, signOut } from 'firebase/auth';
-import { useEffect } from 'react';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 
 export function MenuHeader() {
   const navigate = useNavigate();
   const auth = getAuth();
-  const user = auth.currentUser;
+
   const [companyRecoil, setCompanyRecoil] = useRecoilState(companyState);
   const [userRecoil, setUserRecoil] = useRecoilState(userState);
+  const [user, setUser] = useState<any>(null);
 
   async function handleLogout() {
     signOut(auth)
@@ -93,6 +94,8 @@ export function MenuHeader() {
   ].map((item: any) => {
     if (userRecoil?.company?.user_category === 'cashier' && item?.key !== 'sales') return null;
     if (userRecoil?.company?.user_category === 'warehouse' && item?.key !== 'inventory') return null;
+    if (userRecoil?.company?.approval_status !== 'approved') return null;
+    if (!userRecoil?.company?.user_category) return null;
     return item;
   }).filter(Boolean);
 
@@ -100,16 +103,29 @@ export function MenuHeader() {
     if (dataUser?.uid) {
       const detailUser = await getDetailData('profile', dataUser?.uid);
       const detailCompany = await getDetailData('company', detailUser?.company?.id);
-      setUserRecoil(detailUser);
+      await submitData('profile', {
+        id: detailUser?.id,
+        ...detailUser,
+        company: { ...detailUser?.company, ...detailCompany },
+        user_information: JSON.stringify(dataUser),
+      });
+      const newUser = await getDetailData('profile', dataUser?.uid);
+      setUserRecoil(newUser);
       setCompanyRecoil(detailCompany);
     }
   }
 
   useEffect(() => {
-    if (user) {
-      generateSetting(user);
-    }
-  }, [user]);
+    const unregisterAuthObserver = onAuthStateChanged(auth, (dataUser) => {
+      if (dataUser) {
+        generateSetting(dataUser);
+        setUser(dataUser);
+      } else {
+        handleLogout();
+      }
+    });
+    return () => unregisterAuthObserver();
+  }, []);
 
   const { pathname } = window.location;
   const module = pathname.substring(1);
@@ -127,7 +143,7 @@ export function MenuHeader() {
       <div className="left-side">
         <Title style={{ color: 'white' }}>{companyRecoil?.name ?? 'JSHOP'}</Title>
       </div>
-      {userRecoil && user?.emailVerified && (
+      {userRecoil?.company?.id && user?.emailVerified && (
         <Menu
           selectedKeys={[module]}
           theme="dark"

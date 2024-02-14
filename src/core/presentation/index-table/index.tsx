@@ -191,13 +191,13 @@ export function IndexTable(props: Props) {
       <div style={{ display: 'inline' }}>
         {isShowDelete && (
           <Popconfirm title="Are you sure want to delete item?" onConfirm={() => handleDelete([record])}>
-            <Button danger size="small">
+            <Button style={{ marginRight: '10px' }} danger size="small">
               <IoTrashBinSharp />
             </Button>
           </Popconfirm>
         )}
         {isShowUpdate && (
-          <Button style={{ marginLeft: '10px' }} size="small" onClick={() => (rowActionProps?.onClickUpdate ? rowActionProps?.onClickUpdate(record) : openForm({ type: 'Edit', data: record }))}>
+          <Button style={{ marginRight: '10px' }} size="small" onClick={() => (rowActionProps?.onClickUpdate ? rowActionProps?.onClickUpdate(record) : openForm({ type: 'Edit', data: record }))}>
             <TfiPencilAlt />
           </Button>
         )}
@@ -264,8 +264,9 @@ export function IndexTable(props: Props) {
   return (
     <Card title={<div style={{ textAlign: 'left', width: '100%' }}>{title}</div>}>
       {showCreate && (
-      <Button onClick={() => openForm({ type: 'Create', data: null })}>
+      <Button style={{ marginRight: '10px' }} onClick={() => openForm({ type: 'Create', data: null })}>
         Add
+        {' '}
         {title}
       </Button>
       )}
@@ -276,12 +277,12 @@ export function IndexTable(props: Props) {
           onConfirm={() => handleDelete(selectedRows)}
           disabled={selectedRows?.length === 0}
         >
-          <Button danger size="small" style={{ marginLeft: '10px' }} disabled={selectedRows?.length === 0}>
+          <Button danger size="small" style={{ marginRight: '10px' }} disabled={selectedRows?.length === 0}>
             <IoTrashBinSharp />
           </Button>
         </Popconfirm>
       )}
-      <Button size="small" style={{ marginLeft: '10px' }} onClick={handleGetData}>
+      <Button size="small" style={{ marginRight: '10px' }} onClick={handleGetData}>
         <IoReload />
       </Button>
       <Modal

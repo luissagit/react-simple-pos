@@ -19,19 +19,20 @@ const defaultCompany = {
 
 export function Home() {
   const navigate = useNavigate();
-  const auth = getAuth();
-  const user = auth.currentUser;
-  const isEmailVerified = user?.emailVerified;
-  const [isEmailSent, setIsEmailSent] = useState(false);
   const [userRecoil, setUserRecoil] = useRecoilState(userState);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const userInformation = userRecoil ? JSON.parse(userRecoil?.user_information) : null;
+  const isEmailVerified = userInformation?.emailVerified;
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  const auth = getAuth();
+  const user = auth.currentUser;
 
   useEffect(() => {
-    if (!user) {
+    if (!userRecoil) {
       navigate('/login');
     }
-  }, [user]);
+  }, [userRecoil?.id]);
 
   async function handleVerifyEmail() {
     try {
@@ -116,7 +117,10 @@ export function Home() {
       {userRecoil?.company?.approval_status === 'waiting' && (
         <Card>Your account is now waiting approval for company.</Card>
       )}
-      {!userRecoil?.company && userRecoil?.id && (
+      {isEmailSent && (
+        <Card>Please confirm email in your email!</Card>
+      )}
+      {!userRecoil?.company?.id && userRecoil?.id && (
         <div>
           <h2 style={{ textAlign: 'center' }}>
             You have not connected to any company, please connect to a company first!

@@ -23,7 +23,7 @@ export function PointOfSale() {
     }
   }, [id]);
   return (
-    <Form name="point_of_sale" form={form} labelCol={{ span: 7 }} labelAlign="left">
+    <Form name="point_of_sale" form={form} labelCol={{ span: 7 }} labelAlign="left" layout="vertical">
       <Row gutter={[8, 8]}>
         <Col xs={24} sm={24} md={24} lg={16} xxl={16}>
           <Form.Item shouldUpdate noStyle>

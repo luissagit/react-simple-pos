@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import {
   collection, endAt, getDocs, orderBy, query, startAt,
 } from 'firebase/firestore';
-import { db } from '@jshop/core';
+import { companyState, db } from '@jshop/core';
 import { v4 } from 'uuid';
+import { useRecoilState } from 'recoil';
 import { SelectPaginateProps } from '../select/entities';
 
 export function SelectPaginate(props: SelectPaginateProps) {
@@ -15,10 +16,13 @@ export function SelectPaginate(props: SelectPaginateProps) {
     table,
     isClearable = true,
     transformOptions,
+    keySearch,
+    customLabel,
     // filterOptions = [],
   } = props;
   const dataRef = collection(db, table);
   const [selectedValue, setSelectedValue] = useState<any>();
+  const [companyRecoil] = useRecoilState(companyState);
   function onChangeSelect(data: any, meta: any) {
     const item = data?.value;
     if (onChange) onChange(item, meta);
@@ -33,7 +37,7 @@ export function SelectPaginate(props: SelectPaginateProps) {
             resultSelectedValue = [
               ...resultSelectedValue,
               {
-                label: item,
+                label: customLabel ? customLabel(item) : item,
                 value: item,
               },
             ];
@@ -41,7 +45,7 @@ export function SelectPaginate(props: SelectPaginateProps) {
             resultSelectedValue = [
               ...resultSelectedValue,
               {
-                label: item?.name ?? item?.code,
+                label: customLabel ? customLabel(item) : item?.name ?? item?.code,
                 value: item,
               },
             ];
@@ -53,7 +57,7 @@ export function SelectPaginate(props: SelectPaginateProps) {
     } else if (typeof data === 'string' && data) resultSelectedValue = { label: data, data };
     else {
       resultSelectedValue = {
-        label: data?.name ?? data?.code,
+        label: customLabel ? customLabel(data) : data?.name ?? data?.code,
         value,
       };
     }
@@ -68,7 +72,7 @@ export function SelectPaginate(props: SelectPaginateProps) {
   async function loadOptions(search: string, { page }: any): Promise<any> {
     const first = query(
       dataRef,
-      orderBy('name'),
+      orderBy(keySearch ?? 'name'),
       startAt(search?.toUpperCase()),
       endAt(`${search?.toUpperCase()}\uf8ff`),
     );
@@ -76,17 +80,19 @@ export function SelectPaginate(props: SelectPaginateProps) {
     let items: any[] = [];
     documentSnapshots.forEach((document: any) => {
       const item = document.data();
-      const resultItem = {
-        ...item,
-        id: document?.id,
-      };
-      items = [...items, resultItem];
+      if (companyRecoil?.id === item?.company?.id) {
+        const resultItem = {
+          ...item,
+          id: document?.id,
+        };
+        items = [...items, resultItem];
+      }
     });
 
     if (transformOptions) items = transformOptions(items);
 
     const options = items?.map((item: any) => ({
-      label: item?.name,
+      label: customLabel ? customLabel(item) : item?.name,
       value: item,
     }));
 

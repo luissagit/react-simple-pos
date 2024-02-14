@@ -73,7 +73,9 @@ export function Setting() {
           labelCol={{ xl: 4, md: 6, sm: 8 }}
           labelAlign="left"
         >
-          <Form.Item name="id" hidden />
+          <Form.Item name="id" label="Company ID">
+            <Input readOnly />
+          </Form.Item>
           <Form.Item label="Name" name="name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>

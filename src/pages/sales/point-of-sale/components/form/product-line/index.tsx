@@ -1,7 +1,7 @@
-import { db, rupiah } from '@jshop/core';
+import { SelectPaginate, db, rupiah } from '@jshop/core';
 import {
   Button,
-  Card, InputNumber, notification,
+  Card, Form, InputNumber, notification,
 } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import {
@@ -79,7 +79,7 @@ export function FormProductLine(props: Props) {
       key: 'qty',
       dataIndex: ['qty'],
       render(item, record) {
-        return <InputNumber onChange={(data) => onChangeQty(data, record)} value={value} />;
+        return <InputNumber onChange={(data) => onChangeQty(data, record)} value={item} />;
       },
     },
     {
@@ -160,8 +160,72 @@ export function FormProductLine(props: Props) {
     onComplete: getDataProduct,
   });
 
+  function customLabelProduct(data: any) {
+    return `${data?.code} - ${data?.brand?.name ?? ''} ${data?.product_master?.name ?? ''} ${data?.name ?? ''}`;
+  }
+
+  const [form] = Form.useForm();
+  async function handleSubmit(payload: any) {
+    const data = payload?.product;
+    const qty = payload?.input_qty ?? 1;
+    const newData = {
+      product: data,
+      qty: payload?.input_qty,
+      uom: data?.uom,
+      price_per_unit: data?.price_per_unit,
+      net_price: (data?.price_per_unit ?? 0) * qty,
+      brand: data?.brand,
+      product_master: data?.product_master,
+    };
+    const newList = [
+      ...dataLine,
+      newData,
+    ];
+    if (onChange) onChange(newList);
+    form.resetFields();
+  }
+
   return (
     <Card style={{ height: '80vh' }}>
+      <Form form={form} name="product_input" onFinish={handleSubmit} layout="vertical">
+        <Form.Item shouldUpdate noStyle>
+          {({ setFieldsValue }) => {
+            function onChangeProduct(selected: any) {
+              if (selected) {
+                document?.getElementById('input_qty')?.focus();
+                setFieldsValue({ qty: 1 });
+              }
+            }
+            return (
+              <Form.Item label="Product Code" name="product">
+                <SelectPaginate keySearch="code" table="product_variant" customLabel={customLabelProduct} onChange={onChangeProduct} />
+              </Form.Item>
+            );
+          }}
+        </Form.Item>
+        <Form.Item shouldUpdate noStyle>
+          {() => {
+            function onKeyDown(event: any) {
+              if (event?.key?.toLowerCase()?.includes('enter')) {
+                document?.getElementById('submit_button_item')?.focus();
+              }
+            }
+            return (
+              <Form.Item label="Qty" name="input_qty">
+                <InputNumber
+                  id="input_qty"
+                  onKeyDown={onKeyDown}
+                  addonAfter={(
+                    <Button id="submit_button_item" onClick={form.submit}>
+                      Submit
+                    </Button>
+                  )}
+                />
+              </Form.Item>
+            );
+          }}
+        </Form.Item>
+      </Form>
       <Table
         columns={columns}
         pagination={false}

@@ -1,20 +1,48 @@
 import {
   Button, Card, Form, Input, notification,
 } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useRecoilState } from 'recoil';
+import {
+  companyState, getDetailData, submitData, userState,
+} from '@jshop/core';
 import { handleLogin } from './functions';
 
 export function Login() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const [, setCompanyRecoil] = useRecoilState(companyState);
+  const [, setUserRecoil] = useRecoilState(userState);
+
+  async function generateSetting(dataUser: any) {
+    if (dataUser?.uid) {
+      const detailUser = await getDetailData('profile', dataUser?.uid);
+      const detailCompany = await getDetailData('company', detailUser?.company?.id);
+      await submitData('profile', {
+        id: detailUser?.id,
+        ...detailUser,
+        company: { ...detailUser?.company, ...detailCompany },
+        user_information: JSON.stringify(dataUser),
+      });
+      const newUser = await getDetailData('profile', dataUser?.uid);
+      const userCategory = newUser?.company?.user_category;
+      if (['superadmin', 'admin'].includes(userCategory)) navigate('/sales-orders');
+      else if (userCategory === 'cashier') navigate('/point-of-sale');
+      else if (userCategory === 'warehouse') navigate('/product-variant');
+      else navigate('/');
+      setUserRecoil(newUser);
+      setCompanyRecoil(detailCompany);
+    }
+  }
+
   async function handleSubmit(payload: any) {
     try {
       setLoading(true);
-      await handleLogin(payload);
-      navigate('/');
+      const response = await handleLogin(payload);
+      await generateSetting(response);
     } catch (err: any) {
       notification.error({
         message: err?.message,
@@ -23,19 +51,6 @@ export function Login() {
       setLoading(false);
     }
   }
-
-  async function generateUser() {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigate('/');
-      }
-    });
-  }
-
-  useEffect(() => {
-    generateUser();
-  }, []);
 
   return (
     <div style={{ margin: '0 auto' }}>
